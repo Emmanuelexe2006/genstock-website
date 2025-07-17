@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GenStock</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <style>
+  /* KEYFRAMES for the continuous default glow */
+@keyframes continuousGlow {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px var(--light-green)) brightness(1); /* Subtle glow */
+    }
+    50% {
+        filter: drop-shadow(0 0 10px var(--light-green)) brightness(1.1); /* Slightly more intense glow */
+    }
+}
+
+/* KEYFRAMES for the pop-in/pop-out (pulse) effect on hover */
+@keyframes popPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); } /* Pop out bigger */
+    100% { transform: scale(1); }  /* Pop back in */
+}
+
+
+.amc-logo {
+    position: relative;
+    /* Default state: Apply continuous glow animation */
+    animation: continuousGlow 2s ease-in-out infinite alternate; /* Slower, continuous glow */
+
+    /* Ensure no transform conflicts with animation. Base scale is 1. */
+    transform: scale(1);
+    transition: transform 0.3s ease; /* Smooth transition for scale when starting/stopping popPulse */
+}
+
+/* Optional: Stagger the continuous glow animation */
+.amc-logo:nth-child(2) { animation-delay: 0.1s; }
+.amc-logo:nth-child(3) { animation-delay: 0.2s; }
+.amc-logo:nth-child(4) { animation-delay: 0.3s; }
+/* Add more :nth-child rules if you have more logos to stagger */
+
+.amc-logo img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Ensures no extra space below img */
+
+    /* This filter makes light/white logos visible on a dark background *permanently* */
+    filter: invert(1) brightness(1.5); /* Inverts colors and then brightens. Adjust as needed. */
+    /* If invert(1) looks wrong, use: filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.4)); */
+}
+
+.advisors-section {
+    padding: 4rem 2rem;
+    background: #111;
+    position: relative;
+    overflow: hidden;
+}
+
+.advisors-section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1s ease-out;
+}
+
+.advisors-section-container.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.advisors-section .section-title {
+    color: var(--light-green);
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+}
+
+.scrolling-banner {
+    background-color: var(--dark-green);
+    color: var(--light-green);
+    padding: 0.5rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-bottom: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.scrolling-banner-text {
+    display: inline-block;
+    animation: scroll-left 40s linear infinite;
+    font-weight: 600;
+}
+
+.scrolling-banner-text span {
+    margin: 0 2rem;
+    font-style: italic;
+}
+
+/* FIX: Changed animation to scroll seamlessly from right to left */
+@keyframes scroll-left {
+    0% { transform: translateX(100%); } /* Start from right, off-screen */
+    100% { transform: translateX(-100%); } /* Move to left, off-screen */
+}
+
+
+.about-us-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  background: linear-gradient(135deg, var(--dark-green), #254632);
+  border-radius: 22px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.about-person {
+  display: flex;
+  flex: 1 1 0;
+  padding: 2rem 2.5rem;
+  gap: 1.8rem;
+  align-items: center;
+}
+
+.about-portrait {
+  width: 180px;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 20px;
+  border: 4px solid var(--light-green);
+  box-shadow: 0 8px 32px rgba(120,186,123,0.3);
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.about-info {
+  color: #d4ffd4;
+  flex: 1;
+}
+
+.about-info h3 {
+  color: var(--light-green);
+  font-family: 'Satoshi', 'Manrope', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  margin: 0 0 0.3rem 0;
+}
+
+.about-title {
+  background: var(--light-green);
+  color: var(--dark-green);
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.15em 0.7em;
+  border-radius: 0.3em;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.about-info p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.divider {
+  width: 3px;
+  background: linear-gradient(180deg, #78BA7B 0%, #254632 100%);
+  margin: 0 1rem;
+  border-radius: 3px;
+  align-self: stretch;
+  opacity: 0.85;
+}
+
+/* New About Us Scrolling Section Styles */
+.about-us-scrolling {
+  padding: 4rem 2rem;
+  background: var(--black);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-us-scrolling-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about-us-scrolling-content {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.about-us-scrolling-content.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about-us-scrolling h2 {
+    font-size: 2.5rem;
+    color: var(--light-green);
+    margin-bottom: 1.5rem;
+}
+
+.about-us-scrolling p {
+    font-size: 1.2rem; /* Consistent font size */
+    line-height: 1.8; /* Consistent line height */
+    color: #d4ffd4;
+    margin-bottom: 0;
+    height: 250px; /* Changed from max-height to fixed height for consistent scrolling viewport */
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box; /* Include padding/border in height calculation */
+}
+
+/* Auto-scrolling text effect */
+.scrolling-container {
+    height: 200px; /* Set a fixed height for the visible scrolling area, adjust as needed */
+    overflow: hidden; /* Hide content outside this area */
+    position: relative;
+}
+
+.scrolling-text-inner {
+    display: block; /* Changed from inline-block for predictable height */
+    animation: scroll-up 20s linear infinite;
+    /* Ensure it's tall enough to contain duplicated content */
+    padding-bottom: 1px; /* Small buffer to help prevent fractional pixel jumps */
+}
+
+@keyframes scroll-up {
+    0% { transform: translateY(0%); }
+    100% { transform: translateY(-50%); } /* This needs to be precisely -50% */
+}
+
+
+@media (max-width: 900px) {
+  .about-us-row {
+    flex-direction: column;
+    padding: 2rem 1rem;
+  }
+  .about-person {
+    flex-direction: column;
+    padding: 1.5rem 0;
+    text-align: center;
+  }
+  .about-portrait {
+    width: 140px;
+    height: 210px;
+    margin-bottom: 1rem;
+  }
+  .divider {
+    width: 60%;
+    height: 3px;
+    margin: 1.5rem auto;
+  }
+  .about-info h3 {
+    font-size: 1.5rem;
+  }
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Regular.woff2') format('woff2'),
+       url('fonts/Satoshi-Regular.woff') format('woff'),
+       url('fonts/Satoshi-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Bold.woff2') format('woff2'),
+       url('fonts/Satoshi-Bold.woff') format('woff'),
+       url('fonts/Satoshi-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+:root {
+  --dark-green: #1B3D2A;
+  --light-green: #78BA7B;
+  --black: #111111;
+  --white: #FFFFFF;
+  --overlay: rgba(27, 61, 42, 0.7);
+  --card-bg: rgba(27, 61, 42, 0.89);
+  --card-bg-blur: rgba(27, 61, 42, 0.97);
+  --card-shadow: 0 8px 32px 0 rgba(0,0,0,0.32);
+  --card-border: 1.5px solid #2e5640;
+  --card-radius: 22px;
+  --transition: .48s cubic-bezier(.21,.7,.29,1.12);
+}
+
+html {
+  /* This enables smooth scrolling for the entire page when an anchor link is clicked */
+  scroll-behavior: smooth;
+}
+
+body, html {
+  font-family: 'Manrope', Arial, sans-serif;
+  font-weight: 400;
+  background-color: var(--black);
+  color: var(--white);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  cursor: none !important;
+  height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6,
+.section-title,
+.hero-typewriter-container .typewriter-bg {
+  font-family: 'Satoshi', 'Manrope', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.section-title, h2 {
+  font-family: 'Manrope', Arial, sans-serif;
+  font-weight: 600;
+}
+
+nav a, .stat-label, .card-summary, .fund-period, .fund-description,
+.contact-info, .contact-form, .form-group label, .submit-btn, .rights, .footer-highlight {
+  font-family: 'Manrope', Arial, sans-serif;
+  font-weight: 400;
+}
+
+.highlight {
+  color: var(--light-green);
+  font-weight: 700;
+  background: rgba(120,186,123,0.13);
+  padding: 0 0.2em;
+  border-radius: 0.2em;
+}
+.footer-highlight {
+  color: var(--light-green);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+* { box-sizing: border-box; }
+.cursor {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--light-green);
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10000;
+  mix-blend-mode: difference;
+  transition: transform 0.2s cubic-bezier(.21,.7,.29,1.12), background 0.2s cubic-bezier(.21,.7,.29,1.12), opacity 0.2s;
+  will-change: transform, background, opacity;
+}
+.cursor.click { transform: scale(1.5); }
+.cursor.hover { background: #4ea55b; }
+header {
+  padding: 1rem 2rem 1rem 1rem;
+  background: var(--black);
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  animation: slideDown 0.8s ease-out;
+}
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.logo-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.logo-left img {
+  height: 150px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 0px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(27,61,42,0.09);
+}
+nav { display: flex; gap: 2rem; }
+nav a {
+  color: var(--white); text-decoration: none; font-weight: 500;
+  position: relative; padding: 0.5rem 1rem; transition: all 0.3s ease; overflow: hidden;
+}
+nav a::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(120, 186, 123, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+nav a:hover::before { left: 100%; }
+nav a:hover { color: var(--light-green); transform: translateY(-2px); }
+.hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 0 2rem 2rem;
+  background: linear-gradient(135deg, var(--dark-green), #2a5a3e);
+  position: relative;
+  overflow: hidden;
+}
+.hero-typewriter-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.typewriter-bg {
+  display: inline-block;
+  background: var(--light-green);
+  color: var(--dark-green) !important;
+  border-radius: 0.6em;
+  padding: 0.18em 0.7em;
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  min-height: 3.5rem;
+  box-shadow: 0 2px 12px rgba(27,61,42,0.10);
+  vertical-align: middle;
+  margin-right: 0.1em;
+  transition: background 0.2s;
+}
+#typewriter {
+  background: none;
+  border: none;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  min-height: unset;
+}
+.hero p {
+  font-size: 1.25rem; max-width: 750px; margin: 0 auto;
+  line-height: 1.6; opacity: 0; animation: fadeInUp 1s ease-out 2.5s forwards;
+  text-align: center;
+  font-weight: 700;
+}
+@keyframes fadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(30px); }
+}
+.market-stats {
+  padding: 2rem 2rem;
+  background: rgba(27, 61, 42, 0.1);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem; max-width: 1200px; margin: 0 auto;
+  position: relative;
+}
+.stat-card {
+  background: linear-gradient(135deg, var(--dark-green), #2a5a3e);
+  padding: 2rem; border-radius: 15px; text-align: center;
+  transform: translateY(50px); opacity: 0; transition: all 0.6s ease;
+  border: 1px solid rgba(120, 186, 123, 0.3); position: relative;
+}
+.stat-card.animate { transform: translateY(0); opacity: 1; }
+.stat-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(120, 186, 123, 0.3); }
+.stat-icon { font-size: 3rem; color: var(--light-green); margin-bottom: 1rem; }
+.stat-number { font-size: 3rem; font-weight: 700; color: var(--light-green); margin-bottom: 0.5rem; }
+.stat-label { font-size: 1.1rem; color: rgba(255, 255, 255, 0.8); }
+.card-container {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;
+  padding: 2rem 2rem; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;
+}
+.card {
+  background: var(--card-bg);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  padding: 2.5rem 2rem 2rem 2rem; width: 340px; min-height: 220px;
+  box-shadow: var(--card-shadow);
+  color: var(--white); cursor: pointer; position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden;
+  transform: translateY(50px); opacity: 0;
+  backdrop-filter: blur(3px);
+}
+.card.animate { transform: translateY(0); opacity: 1; }
+.card:hover { transform: translateY(-10px) scale(1.04); box-shadow: 0 25px 50px rgba(120, 186, 123, 0.3);}
+.card h3 {
+  font-size: 1.3rem; margin-bottom: 1rem; color: var(--light-green); position: relative;
+}
+.card-summary {
+  font-size: 1.05rem;
+  color: #d4ffd4;
+  margin-bottom: 0.8rem;
+  opacity: 0.8;
+}
+.card img {
+  width: 100%;
+  max-height: 110px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px #0005;
+}
+.card-expanded {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 3000 !important;
+  margin: 0 !important;
+  background: var(--card-bg-blur) !important;
+  border: var(--card-border) !important;
+  border-radius: var(--card-radius) !important;
+  box-shadow: var(--card-shadow) !important;
+  backdrop-filter: blur(10px) brightness(0.9) !important;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+}
+
+.card-expanded-content {
+  flex: 3 !important;
+  padding: 3rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  color: #eaffea !important;
+  overflow-y: auto !important;
+}
+
+.card-expanded h3 {
+  font-size: 2.8rem !important;
+  color: var(--light-green) !important;
+  margin-top: 0 !important;
+  margin-bottom: 1.5rem !important;
+  line-height: 1.2 !important;
+}
+
+.card-expanded .card-details {
+  font-size: 1.2rem !important;
+  line-height: 1.8 !important;
+  color: #eaffea !important;
+  margin-bottom: 1.5rem !important;
+  opacity: 0.95 !important;
+}
+
+.card-expanded-image {
+  flex: 2 !important;
+  min-width: 200px !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  border-radius: 0 var(--card-radius) var(--card-radius) 0 !important;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.4) !important;
+}
+
+.close-x {
+  position: absolute !important;
+  top: 20px !important;
+  right: 25px !important;
+  font-size: 2.5rem !important;
+  color: var(--white) !important;
+  opacity: 0.7 !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  background: rgba(27,61,42,0.6) !important;
+  border-radius: 50% !important;
+  padding: 0.2em 0.5em !important;
+  z-index: 3001 !important;
+  pointer-events: auto !important;
+}
+
+.close-x:hover {
+  opacity: 1 !important;
+  background: var(--light-green) !important;
+  color: var(--black) !important;
+  transform: scale(1.1) !important;
+}
+
+#card-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(7, 13, 10, 0.8) !important;
+  z-index: 2999 !important;
+  backdrop-filter: blur(5px) !important;
+  transition: opacity 0.3s ease !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+@media (max-width: 900px) {
+  .card-expanded {
+    flex-direction: column !important;
+    width: 95vw !important;
+    height: 90vh !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .card-expanded-image {
+    flex: none !important;
+    width: 100% !important;
+    height: 25% !important;
+    border-radius: var(--card-radius) var(--card-radius) 0 0 !important;
+  }
+
+  .card-expanded-content {
+    flex: 1 !important;
+    height: 75% !important;
+    padding: 2rem !important;
+  }
+
+  .card-expanded h3 {
+    font-size: 2rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .card-expanded .card-details {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+  }
+
+  .close-x {
+    top: 15px !important;
+    right: 18px !important;
+    font-size: 2rem !important;
+  }
+}
+
+    .close-x:hover { opacity: 1; background: var(--light-green); color: var(--black);}
+    .amc-details {
+      padding: 3rem 2rem; background: linear-gradient(135deg, var(--black), #1a1a1a); position: relative;
+    }
+    .section-title {
+      font-size: 2.5rem; text-align: center; color: var(--light-green); margin-bottom: 3rem;
+      position: relative; display: inline-block; width: 100%;
+    }
+    .section-title::after {
+      content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 3px; background: var(--light-green); transition: width 0.8s ease;
+    }
+    .section-title.animate::after { width: 200px; }
+    .amc-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem; max-width: 1200px; margin: 0 auto;
+    }
+    .amc-card {
+      background: linear-gradient(135deg, var(--dark-green), #2a5a3e);
+      padding: 2rem; border-radius: 15px; border: 1px solid rgba(120, 186, 123, 0.3);
+      transform: scale(0.9); opacity: 0; transition: all 0.6s ease; position: relative; overflow: hidden;
+      text-align: center;
+    }
+    .amc-card.animate { transform: scale(1); opacity: 1; }
+    .amc-card:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(120, 186, 123, 0.2);}
+    .amc-card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+      background: linear-gradient(90deg, var(--light-green), #4ea55b);
+      transform: scaleX(0); transition: transform 0.3s ease;
+    }
+    .amc-card:hover::before { transform: scaleX(1);}
+    .amc-logo {
+        height: 80px;
+        max-width: 100%;
+        object-fit: contain;
+        margin-bottom: 1rem;
+        filter: brightness(0) invert(1);
+    }
+    .amc-name { font-size: 1.3rem; color: var(--light-green); font-weight: 600;}
+    .contact {
+      padding: 3rem 2rem; background: linear-gradient(135deg, var(--dark-green), #2a5a3e); position: relative;
+    }
+    .contact-container {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    }
+    .contact-info { opacity: 0; transform: translateX(-50px); transition: all 0.8s ease; }
+    .contact-info.animate { opacity: 1; transform: translateX(0);}
+    .contact-form {
+      background: var(--card-bg);
+      padding: 3rem; border-radius: 20px;
+      border: 1px solid rgba(120, 186, 123, 0.3); opacity: 0; transform: translateX(50px);
+      transition: all 0.8s ease;
+      color: #eaffea;
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(3px);
+    }
+    .contact-form.animate { opacity: 1; transform: translateX(0);}
+    .form-group { margin-bottom: 1.5rem; position: relative;}
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.07);
+      border: 2px solid rgba(120, 186, 123, 0.3); border-radius: 10px;
+      color: #eaffea; font-size: 1rem; transition: all 0.3s ease;
+      font-family: inherit;
+    }
+    .form-group select {
+  color: #eaffea !important;
+  background: var(--card-bg) !important;
+  border: 2px solid rgba(120, 186, 123, 0.3);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group select option {
+  background: var(--card-bg);
+  color: #eaffea;
+}
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+  outline: none;
+  border-color: var(--light-green);
+  box-shadow: 0 0 20px rgba(120, 186, 123, 0.3);
+  transform: scale(1.02);
+}
+    .form-group label {
+      position: absolute; top: 1rem; left: 1rem; color: rgba(255, 255, 255, 0.7);
+      pointer-events: none; transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+    .form-group input:focus + label,
+    .form-group textarea:focus + label,
+    .form-group input:not(:placeholder-shown) + label,
+    .form-group textarea:not(:placeholder-shown) + label,
+    .form-group select:focus + label,
+    .form-group select:not(:placeholder-shown) + label {
+      top: -0.5rem; left: 0.5rem; font-size: 0.8rem; color: var(--light-green);
+      background: var(--dark-green); padding: 0 0.5rem;
+    }
+    .submit-btn {
+      width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--light-green), #4ea55b);
+      border: none; border-radius: 10px; color: var(--black); font-size: 1.1rem;
+      font-weight: 600; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;
+    }
+    .submit-btn::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    .submit-btn:hover::before { left: 100%; }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(120, 186, 123, 0.4);}
+    .interactive-dots {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1;
+    }
+    .dot {
+      position: absolute; width: 4px; height: 4px; background: rgba(120,186,123,0.25); border-radius: 50%;
+      transform-origin: center; pointer-events: none;
+      animation: floatDot 12s ease-in-out infinite;
+      transition: transform 0.5s cubic-bezier(.17,.67,.83,.67), background 0.5s;
+    }
+    @keyframes floatDot {
+      0%,100%{transform:translate(0,0);}
+      25%   {transform:translate(3px,-5px);}
+      50%   {transform:translate(-4px,4px);}
+      75%   {transform:translate(2px,-3px);}
+    }
+    .dot.press { animation: none; transform: scale(3); background: rgba(120,186,123,0.9); }
+    #footer-hover-trigger {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 50px; /* Invisible trigger area */
+    z-index: 3000;
+}
+    #bottom-bar {
+      position: fixed; left: 0; bottom: 0; width: 100%; background: rgba(27,61,42,0.95); color: #fff; padding: 1rem 0; text-align: center; z-index: 2000; transform: translateY(100%); transition: transform 0.6s cubic-bezier(.25,1,.5,1); pointer-events: auto;
+    }
+    #bottom-bar.show { transform: translateY(0); }
+    #bottom-bar .rights { opacity: 1; font-size: 0.98rem; letter-spacing: 0.03em; color: #d4ffd4; display: inline-block; margin-left: 1.5rem; }
+
+    /* --- NEW: CSS-ONLY SCROLLING FIX --- */
+    /* This rule sets the scroll offset for the sticky header on desktop. */
+    /* It targets all the specific section IDs from your navigation. */
+    #home, #advisors, #about-us, #services, #amcs, #contact, #brochure {
+      scroll-margin-top: 180px; /* Adjust this value to precisely match your desktop header's height */
+    }
+
+    #home, #about-us, #advisors {
+    padding-top: 10rem;
+    /* Removed scroll-margin-top from here, as it's handled by the general rule above */
+  }
+
+    .brochure-cta {
+      display: flex; justify-content: center; align-items: center; padding: 4rem 1rem; background: linear-gradient(135deg, var(--dark-green), #254632); position: relative; overflow: hidden; opacity: 0; transform: translateY(60px); transition: all 0.8s ease;
+    }
+    .brochure-cta.animate { opacity: 1; transform: translateY(0); }
+    .brochure-btn {
+      display: inline-flex; align-items: center; gap: 0.75rem; font-size: 1.35rem; font-weight: 700; color: var(--black); background: var(--light-green); padding: 1rem 2.5rem; border: none; border-radius: 999px; cursor: pointer; box-shadow: 0 15px 35px rgba(120,186,123,0.35); position: relative; overflow: hidden; transition: all 0.35s var(--transition);
+    }
+    .brochure-btn i { font-size: 1.45rem; transition: transform 0.3s ease; }
+    .brochure-btn:hover i { transform: translateY(-2px); }
+    .brochure-btn::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%); opacity: 0; transform: scale(0.8); transition: all 0.6s ease;
+    }
+    .brochure-btn:hover { transform: translateY(-6px) scale(1.05); box-shadow: 0 20px 50px rgba(120,186,123,0.4); }
+    .brochure-btn:hover::before { opacity: 1; transform: scale(1.2); animation: pulseGlow 1.5s ease-in-out infinite; }
+    .brochure-btn:active { transform: translateY(-2px) scale(0.98); }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+    .brochure-btn.downloading { pointer-events: none; opacity: 0.8; }
+    .brochure-btn.downloading::after {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 1.5s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .welcome-text {
+      display: inline-block; color: var(--light-green); background: rgba(120,186,123,0.08); padding: 0 0.2em; border-radius: 0.2em; font-weight: 700; animation: highlight-glow 3s ease-in-out infinite alternate;
+    }
+    @keyframes highlight-glow {
+      0% { text-shadow: 0 0 5px rgba(120, 186, 123, 0.3); }
+      50% { text-shadow: 0 0 10px var(--light-green), 0 0 20px var(--light-green); }
+      100% { text-shadow: 0 0 5px rgba(120, 186, 123, 0.3); }
+    }
+    @media (max-width: 900px) {
+      .card-expanded { flex-direction: column; }
+      .card-expanded-image { width: 100%; border-radius: 0 0 22px 22px; min-width: 0; max-width: 100%; }
+      .card-expanded-content { padding: 5rem 1.5rem; }
+      .amc-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* --- MOBILE OPTIMIZATION --- */
+    @media (max-width: 768px) {
+    /* NEW: This rule sets a different scroll offset specifically for mobile devices. */
+    #home, #advisors, #about-us, #services, #amcs, #contact, #brochure {
+      scroll-margin-top: 100px; /* Adjust this value to precisely match your mobile header's height */
+    }
+
+    body, html {
+        cursor: default !important;
+    }
+    .cursor {
+        display: none !important;
+    }
+    header {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0.8rem 1rem;
+        align-items: center;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .logo-left {
+        gap: 0.4rem;
+        flex-shrink: 0;
+    }
+    .logo-left img {
+        height: 80px;
+    }
+    nav {
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-x;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      scrollbar-width: thin;
+    }
+
+    nav::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    nav a {
+      display: inline-block;
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-size: 1rem;
+      padding: 0.9rem 1.4rem;
+      margin: 0 0.3rem;
+      border-radius: 8px;
+    }
+
+    nav a:active {
+      background-color: rgba(120, 186, 123, 0.2);
+    }
+    .hero {
+        min-height: 45vh;
+        padding: 0 1rem 1rem;
+    }
+    .typewriter-bg {
+        font-size: 1.6rem;
+        min-height: 2.2rem;
+        padding: 0.15em 0.6em;
+    }
+    .hero p {
+        font-size: 0.95rem;
+        padding: 0 0.5rem;
+    }
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 1.8rem;
+    }
+    .section-title.animate::after {
+        width: 140px;
+    }
+    .advisors-section, .about-section, .market-stats, .card-section, .amc-details, .contact, .brochure-cta {
+        padding: 1.8rem 1rem;
+    }
+    .market-stats {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+    .stat-card {
+        padding: 1.2rem;
+    }
+    .stat-icon { font-size: 2.2rem; }
+    .stat-number { font-size: 2.2rem; }
+    .stat-label { font-size: 0.95rem; }
+    .card-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+    }
+    .card {
+        width: 90%;
+        max-width: 320px;
+    }
+    .card-expanded {
+      flex-direction: column !important;
+      width: 95vw !important;
+      height: 90vh !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+    }
+    .card-expanded-image {
+      flex: none !important;
+      width: 100% !important;
+      height: 25% !important;
+      border-radius: var(--card-radius) var(--card-radius) 0 0 !important;
+    }
+    .card-expanded-content {
+      flex: 1 !important;
+      height: 75% !important;
+      padding: 2rem !important;
+      overflow-y: auto !important;
+    }
+    .card-expanded h3 {
+      font-size: 2rem !important;
+    }
+    .card-expanded .card-details {
+      font-size: 1rem !important;
+    }
+    .close-x {
+      top: 15px !important;
+      right: 18px !important;
+      font-size: 2rem !important;
+    }
+    .amc-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+    .amc-card {
+        padding: 1.2rem;
+    }
+    .amc-logo {
+        height: 50px;
+    }
+    .amc-name {
+        font-size: 1rem;
+    }
+    .contact-container {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+    }
+    .contact-form {
+      padding: 3rem;
+    }
+    .brochure-btn {
+        font-size: 1rem;
+        padding: 0.7rem 1.2rem;
+    }
+    #bottom-bar .rights {
+        font-size: 0.75rem;
+        margin-left: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-left img {
+        height: 70px;
+    }
+    nav {
+        gap: 0.4rem;
+    }
+    nav a {
+        font-size: 0.8rem;
+        padding: 0.15rem 0.3rem;
+    }
+    .hero {
+        min-height: 35vh;
+    }
+    .typewriter-bg {
+        font-size: 1.2rem;
+        min-height: 1.8rem;
+    }
+    .hero p {
+        font-size: 0.85rem;
+    }
+    .section-title {
+        font-size: 1.5rem;
+    }
+    .section-title.animate::after {
+        width: 80px;
+    }
+    .amc-grid {
+        grid-template-columns: 1fr;
+    }
+    .card-expanded {
+        width: 98vw !important;
+    }
+    .about-text-animated p {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+}
+
+</style>
+</head>
+<body>
+  <div class="interactive-dots" id="interactiveDots"></div>
+  <div class="cursor" id="cursor"></div>
+  <header>
+    <div class="logo-left">
+      <img src="images\Logo.png" alt="Genstock Logo" />
+    </div>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#advisors">Advisors</a>
+      <a href="#about-us">About Us</a>
+      <a href="#services">Services</a>
+      <a href="#amcs">AMCs</a>
+      <a href="#contact">Contact</a>
+      <a href="#brochure">Brochure</a>
+    </nav>
+  </header>
+  <section class="hero" id="home">
+    <div class="hero-typewriter-container">
+      <span class="typewriter-bg"><span id="typewriter"></span></span>
+    </div>
+    <p style="text-align:center; font-weight:700; font-size:1.25rem; max-width:750px; margin:0 auto; line-height:1.6;">
+      At Genstock, The wealth you
+      <span style="color:var(--light-green);">grow</span> today will
+      <span style="color:var(--light-green);">empower</span> you to
+      <span style="color:var(--light-green);">navigate</span> tough times. Invest today, Secure tomorrow
+    </p>
+  </section>
+
+  <section class="advisors-section" id="advisors">
+      <div class="advisors-section-container">
+          <h2 class="section-title">Meet the Advisors</h2>
+          <div class="scrolling-banner">
+              <div class="scrolling-banner-text">
+                  <span>Expert Guidance</span>
+                  <span>Personalized Strategies</span>
+                  <span>Wealth Management</span>
+                  <span>Risk Analysis</span>
+                  <span>Long-Term Growth</span>
+                  <span>Expert Guidance</span>
+                  <span>Personalized Strategies</span>
+                  <span>Wealth Management</span>
+                  <span>Risk Analysis</span>
+                  <span>Long-Term Growth</span>
+              </div>
+          </div>
+          <div class="about-us-row">
+              <div class="about-person">
+                  <img src="images\Manik.jpg" alt="Manik Mascarenhas" class="about-portrait" />
+                  <div class="about-info">
+                      <h3>Manik Mascarenhas</h3>
+                      <div class="about-title">ARN- 279832</div>
+                      <p>
+                          With a passion for decoding markets and over a decade of experience, Manik crafts personalized investment journeys for every client. His approach blends data-driven analytics with a human touch, ensuring your portfolio truly serves your life goals.
+                      </p>
+                  </div>
+              </div>
+              <div class="divider"></div>
+              <div class="about-person">
+                  <img src="images\Sovita.jpg" alt="Sovita Gonsalves" class="about-portrait" />
+                  <div class="about-info">
+                      <h3>Sovita Alvina Gonsalves</h3>
+                      <div class="about-title">ARN- 279817</div>
+                      <p>
+                          Sovita’s expertise lies in risk management and long-term wealth creation. Her keen eye for detail and commitment to transparency make her the go-to expert for clients seeking clarity and confidence in their financial decisions.
+                      </p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+<section class="about-us-scrolling" id="about-us">
+    <div class="about-us-scrolling-container">
+        <div class="about-us-scrolling-content">
+            <h2 class="section-title">About GenStock</h2>
+            <div class="static-about-content">
+                <p><span class="welcome-text">Welcome to GenStock!</span> where your financial aspirations meet our expertise. Founded on the principles of integrity, transparency, and personalized service, we are dedicated to helping you navigate the complexities of the investment world. Our mission is to empower you with the knowledge and tools to build a secure and prosperous financial future.</p>
+                <p>At GenStock, we believe that successful investing is a journey, not a destination. We are committed to building long-term relationships with our clients, offering guidance and support every step of the way. Whether you are planning for retirement, saving for your child's education, or aiming for wealth creation, we are here to help you achieve your goals with confidence.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+  <section id="services">
+    <div class="card-container">
+        <h2 class="section-title">Our Services</h2>
+        <div class="card" data-card="investment">
+          <img src="images\Mutual Fund image.jpg" alt="Mutual Fund" />
+          <h3>Mutual Fund Products</h3>
+          <div class="card-summary">Click for more info!</div>
+        </div>
+        <div class="card" data-card="analytics">
+          <img src="images\AIF.jpg" alt="Analytics" />
+          <h3>Alternate Investment Funds</h3>
+          <div class="card-summary">Click for more info!</div>
+        </div>
+        <div class="card" data-card="advisory">
+          <img src="images\SIF.jpg" alt="Advisory" />
+          <h3>Specialized Investment Funds</h3>
+          <div class="card-summary">Click for more info!</div>
+        </div>
+    </div>
+  </section>
+
+  <section class="amc-details" id="amcs">
+    <h2 class="section-title">Top Performing AMCs</h2>
+    <div class="amc-grid">
+      <div class="amc-card">
+        <img src="images\SBI.png" alt="SBI Mutual Fund Logo" class="amc-logo">
+        <div class="amc-name">SBI Mutual Fund</div>
+      </div>
+      <div class="amc-card">
+        <img src="images\ICICI.png" alt="ICICI Prudential Mutual Fund Logo" class="amc-logo">
+        <div class="amc-name">ICICI Prudential Mutual Fund</div>
+      </div>
+      <div class="amc-card">
+        <img src="images\HDFC.png" alt="HDFC Mutual Fund Logo" class="amc-logo">
+        <div class="amc-name">HDFC Mutual Fund</div>
+      </div>
+      <div class="amc-card">
+        <img src="images\Nippon.png" alt="Nippon India Mutual Fund Logo" class="amc-logo">
+        <div class="amc-name">Nippon India Mutual Fund</div>
+      </div>
+      <div class="amc-card">
+        <img src="images\KMB.png" alt="Kotak Mahindra Mutual Fund Logo" class="amc-logo">
+        <div class="amc-name">Kotak Mahindra Mutual Fund</div>
+      </div>
+      <div class="amc-card">
+          <img src="images\Aditya.png" alt="Aditya Birla Sun Life Mutual Fund Logo" class="amc-logo" style="filter: invert(1);">
+          <div class="amc-name">Aditya Birla Sun Life MF</div>
+      </div>
+      <div class="amc-card">
+          <img src="images\MO.jpg" alt="Motilal Oswal Mutual Fund Logo" class="amc-logo">
+          <div class="amc-name">Motilal Oswal Mutual Fund</div>
+      </div>
+      <div class="amc-card">
+          <img src="images\MF.png" alt="Mirae Asset Mutual Fund Logo" class="amc-logo" style="filter: invert(1) brightness(1.5);">
+          <div class="amc-name">Mirae Asset Mutual Fund</div>
+      </div>
+    </div>
+  </section>
+  <section class="contact" id="contact">
+    <div class="contact-container">
+      <div class="contact-info">
+        <h2 class="section-title">Get Started with Your Investment Journey</h2>
+        <p>Ready to start investing in mutual funds? Our expert team is here to guide you through every step of your investment journey.</p>
+        <div style="margin-top: 2rem;">
+          <h3 style="color: var(--light-green); margin-bottom: 1rem;">Why Choose Genstock?</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;">✓ Human Advisors</li>
+            <li style="margin-bottom: 0.5rem;">✓ Personalized Direction</li>
+            <li style="margin-bottom: 0.5rem;">✓ 24/7 customer support</li>
+            <li style="margin-bottom: 0.5rem;">✓ Real-time portfolio tracking</li>
+            <li style="margin-bottom: 0.5rem;">✓ Experienced Perspective</li>
+          </ul>
+        </div>
+        <div style="margin-top: 2rem;">
+          <h4 style="color: var(--light-green);">Contact Information</h4>
+          <p>📞 +91 9008248629 | +91 9945906591</p>
+          <p>📧 genstockservices@outlook.com</p>
+          <p>📍 Mangalore, Karnataka</p>
+        </div>
+      </div>
+      <div class="contact-form">
+        <h3 style="color: var(--light-green); margin-bottom: 2rem; text-align: center;">Start Your Investment Journey</h3>
+        <form name="consultation-form" id="consultationForm">
+          <div class="form-group">
+            <input type="text" id="name" name="fullName" placeholder=" " required>
+            <label for="fullName">Full Name</label>
+          </div>
+          <div class="form-group">
+            <input type="email" id="email" name="emailAddress" placeholder=" " required>
+            <label for="emailAddress">Email Address</label>
+          </div>
+          <div class="form-group">
+            <input type="tel" id="phone" name="phoneNumber" placeholder=" ">
+            <label for="phoneNumber">Phone Number</label>
+          </div>
+          <div class="form-group">
+            <input type="number" id="investment" name="monthlyInvestmentAmount" placeholder=" " min="0">
+            <label for="monthlyInvestmentAmount">Monthly Investment Amount (₹)</label>
+          </div>
+          <div class="form-group">
+            <select id="investment-goal" name="investmentGoal" required>
+              <option value="" disabled selected>Select an Investment Goal</option>
+              <option value="Retirement Planning">Retirement Planning</option>
+              <option value="Child's Education">Child's Education</option>
+              <option value="Wealth Creation">Wealth Creation</option>
+              <option value="Buying a Home/Car">Buying a Home/Car</option>
+              <option value="Tax Saving">Tax Saving</option>
+              <option value="Other">Other</option>
+            </select>
+            <label for="investmentGoal">Investment Goal</label>
+          </div>
+          <div class="form-group">
+            <textarea id="message" name="additionalInformation" placeholder=" " rows="4"></textarea>
+            <label for="additionalInformation">Additional Information (Optional)</label>
+          </div>
+          <button type="submit" class="submit-btn">Get Free Consultation</button>
+          <p class="form-message" id="formMessage" style="margin-top: 1rem; font-size: 1rem;"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div class="brochure-cta" id="brochure">
+    <button class="brochure-btn" onclick="downloadBrochure()">
+      <span class="btn-text">Download Brochure</span>
+      <i class="fas fa-download"></i>
+    </button>
+  </div>
+
+  <div id="footer-hover-trigger"></div>
+  <footer id="bottom-bar">
+    <span class="rights">© <span class="footer-highlight">2025</span> Genstock. All rights reserved.</span>
+  </footer>
+<script>
+    // NOTE: All custom JavaScript for anchor link scrolling has been removed.
+    // The scrolling is now handled 100% by CSS using `scroll-behavior: smooth`
+    // and `scroll-margin-top`. This is the most reliable and conflict-free method.
+
+    document.documentElement.style.cursor = 'none';
+    // Typewriter effect from center
+    const text = "Grow Your Wealth, The Smart Way";
+    const typewriter = document.getElementById('typewriter');
+    let i = 0;
+    function typeCenter() {
+      const left = Math.floor(i/2);
+      const right = i - left;
+      const mid = Math.floor(text.length/2);
+      let display = '';
+      for (let j = mid-left; j < mid+right; j++) {
+        if (j >= 0 && j < text.length) display += text[j];
+      }
+      typewriter.textContent = display;
+      if (i < text.length) {
+        i++;
+        setTimeout(typeCenter, 60);
+      }
+    }
+    typewriter.textContent = '';
+    setTimeout(() => {
+      typeCenter();
+    }, 600);
+
+    // Interactive Dots
+    function initInteractiveDots() {
+      const container = document.getElementById('interactiveDots');
+      container.innerHTML = '';
+      const dots = [];
+      const spacing = 60;
+      for (let x = 0; x < window.innerWidth; x += spacing) {
+        for (let y = 0; y < window.innerHeight; y += spacing) {
+          const dot = document.createElement('div');
+          dot.className = 'dot';
+          dot.style.left = x + 'px';
+          dot.style.top = y + 'px';
+          container.appendChild(dot);
+          dots.push({ element: dot, x, y, ox: x, oy: y, phase: Math.random()*1000 });
+        }
+      }
+      return dots;
+    }
+    let dots = initInteractiveDots();
+    window.addEventListener('resize', () => { dots = initInteractiveDots(); });
+    function animateDots(t) {
+      dots.forEach(dot => {
+        const offsetX = Math.sin((t/1000)+dot.phase)*4;
+        const offsetY = Math.cos((t/1200)+dot.phase)*4;
+        dot.element.style.left = (dot.ox + offsetX) + 'px';
+        dot.element.style.top  = (dot.oy + offsetY) + 'px';
+      });
+      requestAnimationFrame(animateDots);
+    }
+    requestAnimationFrame(animateDots);
+
+    // Cursor Animation
+    const cursorEl = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      cursorEl.style.opacity = 1;
+      cursorEl.style.top = `${e.clientY - cursorEl.offsetHeight / 2}px`;
+      cursorEl.style.left = `${e.clientX - cursorEl.offsetWidth / 2}px`;
+    });
+    document.addEventListener('mousedown', () => cursorEl.classList.add('click'));
+    document.addEventListener('mouseup', () => cursorEl.classList.remove('click'));
+    document.querySelectorAll('button, .card, input, textarea, a, select').forEach(el => {
+      el.addEventListener('mouseenter', () => cursorEl.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursorEl.classList.remove('hover'));
+    });
+
+
+// Card Expansion Animation
+const cardData = {
+  investment: {
+    title: "Mutual Fund Products",
+    image: "images/Mutual Fund image.jpg",
+    details: `What We Offer:<br>
+    • <b>Goal-Based SIPs</b> – Customised plans for goals like education, retirement, or buying a home<br>
+    • <b>Paperless Onboarding</b> – Hassle-free digital KYC & transactions<br>
+    • <b>Ongoing Portfolio Reviews</b> – We stay on top of your funds, so you don’t have to<br>
+    • <b>Tax-Saving Strategies</b> – Efficient planning using ELSS and other options<br>
+    • <b>Risk Profiling & Suitability</b> – Funds matched to your unique risk appetite<br>
+    • <b>Diversified Portfolios</b> – Spread across asset classes to manage risk<br>
+    • <b>Systematic Withdrawal Plans (SWPs)</b> – Regular payouts for retirees seeking steady income<br>
+    • <b>Systematic Transfer Plans (STPs)</b> – Gradual transfer of funds to protect against market volatility<br>
+    • <b>Lump Sum Investments</b> – Ideal for deploying idle funds effectively`
+  },
+  analytics: {
+    title: "Alternate Investment Funds",
+    image: "images/AIF.jpg",
+    details: `What We Offer:<br>
+    • <b>Seamless Onboarding</b> – End-to-end documentation, compliance, and support<br>
+    • <b>NRI-Friendly Options</b> – Select AIFs structured to suit eligible NRI investors<br>
+    • <b>Portfolio Diversification</b> – AIFs that complement your existing investments with alternative assets<br>
+    • <b>High-Ticket Investment Planning</b> – Advisory for clients investing ₹1 crore and above<br>
+    • <b>Innovation-First Philosophy</b> – We focus on forward-thinking investments that align with evolving macro and sectoral trends`
+  },
+  advisory: {
+    title: "Specialized Investment Funds",
+    image: "images/SIF.jpg",
+    details: `<b>What We Offer:</b><br>
+    • <b>New SEBI-Regulated Product</b> - SIFs are a distinct category introduced by SEBI to cater to sophisticated investors with unique strategies and structures<br>
+    • <b>Minimum Investment of ₹10 Lakhs</b>- Designed for investors with higher risk appetite and long-term vision<br>
+    • <b>Long-Term Growth Focus</b> - Suited for investors with a high-risk appetite and a long-term investment horizon<br>
+    • <b>SEBI Oversight & Transparency</b> - Backed by a robust regulatory framework for investor protection`
+  }
+};
+function createOverlay() {
+  const overlay = document.createElement('div');
+  overlay.id = 'card-overlay';
+  document.body.appendChild(overlay);
+  return overlay;
+}
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('click', function() {
+    const type = card.dataset.card;
+    const rect = card.getBoundingClientRect();
+    const overlay = createOverlay();
+    requestAnimationFrame(() => { overlay.style.opacity = '1'; });
+    const expandedCard = document.createElement('div');
+    expandedCard.className = 'card-expanded';
+    expandedCard.style.cssText = `
+      position: fixed; left: ${rect.left}px; top: ${rect.top}px;
+      width: ${rect.width}px; height: ${rect.height}px;
+      z-index: 3000; display: flex;
+    `;
+    expandedCard.innerHTML = `
+      <div class="card-expanded-content">
+        <h3>${cardData[type].title}</h3>
+        <div class="card-details">${cardData[type].details}</div>
+      </div>
+      <div class="card-expanded-image" style="background-image: url('${cardData[type].image}')"></div>
+      <span class="close-x">&times;</span>
+    `;
+    document.body.appendChild(expandedCard);
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => {
+      expandedCard.style.left = '50%';
+      expandedCard.style.top = '50%';
+      expandedCard.style.transform = 'translate(-50%, -50%)';
+      const w = window.innerWidth, h = window.innerHeight;
+      if (w / h > 1.2) { // Landscape
+          expandedCard.style.width = 'min(1100px, 90vw)';
+          expandedCard.style.height = 'min(700px, 85vh)';
+      } else { // Portrait
+          expandedCard.style.width = '95vw';
+          expandedCard.style.height = '90vh';
+      }
+    });
+    function closeCard() {
+      expandedCard.style.left = rect.left + 'px';
+      expandedCard.style.top = rect.top + 'px';
+      expandedCard.style.transform = 'none';
+      expandedCard.style.width = rect.width + 'px';
+      expandedCard.style.height = rect.height + 'px';
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        if (expandedCard.parentNode) expandedCard.remove();
+        if (overlay.parentNode) overlay.remove();
+        document.body.style.overflow = '';
+      }, 500);
+    }
+    expandedCard.querySelector('.close-x').onclick = closeCard;
+    overlay.onclick = closeCard;
+    document.addEventListener('keydown', function closeOnEsc(e) {
+      if (e.key === 'Escape') {
+        closeCard();
+        document.removeEventListener('keydown', closeOnEsc);
+      }
+    });
+  });
+});
+
+    // Scroll Animations
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate');
+        }
+      });
+    }, observerOptions);
+    document.querySelectorAll(
+      '.card, .stat-card, .amc-card, .contact-info, .contact-form, .section-title, .brochure-cta, .advisors-section-container, .about-us-scrolling-content'
+    ).forEach(el => observer.observe(el));
+
+    // Animated Counter
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const numberEl = entry.target.querySelector('.stat-number');
+          const target = parseInt(numberEl.dataset.target, 10);
+          let start = 0;
+          const duration = 2000;
+          const increment = target / (duration / 16);
+          const counter = setInterval(() => {
+            start += increment;
+            if (start >= target) {
+              numberEl.textContent = target.toLocaleString();
+              clearInterval(counter);
+            } else {
+              numberEl.textContent = Math.floor(start).toLocaleString();
+            }
+          }, 16);
+          statObserver.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    document.querySelectorAll('.stat-card').forEach(card => statObserver.observe(card));
+
+    // Footer hover logic
+    const footerTrigger = document.getElementById('footer-hover-trigger');
+    const bottomBar = document.getElementById('bottom-bar');
+    footerTrigger.addEventListener('mouseenter', () => {
+        bottomBar.classList.add('show');
+    });
+    footerTrigger.addEventListener('mouseleave', () => {
+        bottomBar.classList.remove('show');
+    });
+
+    // Brochure download
+    function downloadBrochure() {
+      const btn = document.querySelector('.brochure-btn');
+      const btnText = btn.querySelector('.btn-text');
+      const originalText = btnText.textContent;
+      btn.classList.add('downloading');
+      btnText.textContent = 'Downloading...';
+      const fileUrl = 'brochures/Genstock-Brochure.jpg';
+      const fileName = 'Genstock-Investment-Brochure.pdf';
+      fetch(fileUrl)
+          .then(response => response.blob())
+          .then(blob => {
+              const link = document.createElement('a');
+              link.href = URL.createObjectURL(blob);
+              link.download = fileName;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(link.href);
+              btnText.textContent = 'Downloaded!';
+              setTimeout(() => {
+                  btn.classList.remove('downloading');
+                  btnText.textContent = originalText;
+              }, 2000);
+          }).catch(() => {
+              btnText.textContent = 'Failed';
+              setTimeout(() => {
+                  btn.classList.remove('downloading');
+                  btnText.textContent = originalText;
+              }, 2000);
+          });
+    }
+
+    // Consultation Form
+    const consultationForm = document.getElementById('consultationForm');
+    const formMessage = document.getElementById('formMessage');
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwpXc-SglwgRBCixCp_MODMYz6bZJl2urUxZQ31g_DRNWrFF68cqDWvkF0uDEqoLa6A/exec';
+    consultationForm.addEventListener('submit', e => {
+      e.preventDefault();
+      formMessage.textContent = 'Submitting...';
+      formMessage.style.color = '#d4ffd4';
+      fetch(scriptURL, { method: 'POST', body: new FormData(consultationForm) })
+        .then(response => {
+          if (response.ok) {
+            formMessage.textContent = 'Thanks for your interest! We will contact you soon.';
+            formMessage.style.color = '#78BA7B';
+            consultationForm.reset();
+          } else { throw new Error('Network response was not ok.'); }
+        })
+        .catch(error => {
+          console.error('Error!', error.message);
+          formMessage.textContent = 'Failed to send. Please try again.';
+          formMessage.style.color = '#ff8a8a';
+        });
+    });
+  </script>
+</body>
+</html>
