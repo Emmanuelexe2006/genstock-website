@@ -423,6 +423,7 @@ nav a:hover { color: var(--light-green); transform: translateY(-2px); }
   align-items: center;
   width: 100%;
   margin-bottom: 1rem;
+  text-align: center; /* Add this line */
 }
 .typewriter-bg {
   display: inline-block;
@@ -847,21 +848,22 @@ nav a:hover { color: var(--light-green); transform: translateY(-2px); }
 
     /* --- MOBILE OPTIMIZATION --- */
     @media (max-width: 768px) {
-    /* NEW: This rule sets a different scroll offset specifically for mobile devices. */
-    #home, #advisors, #about-us, #services, #amcs, #contact, #brochure {
-      scroll-margin-top: 100px; /* Adjust this value to precisely match your mobile header's height */
-    .about-us-scrolling p {
-        /* This ensures that on mobile, the text container can grow as needed */
-        height: auto;
-        overflow: visible;
-    }
-
     body, html {
         cursor: default !important;
     }
     .cursor {
         display: none !important;
     }
+    /* NEW: This rule sets a different scroll offset specifically for mobile devices. */
+    #home, #advisors, #about-us, #services, #amcs, #contact, #brochure {
+      scroll-margin-top: 100px; /* Adjust this value to precisely match your mobile header's height */
+    }
+    .about-us-scrolling p {
+        /* This ensures that on mobile, the text container can grow as needed */
+        height: auto;
+        overflow: visible;
+    }
+
     header {
         flex-direction: row;
         justify-content: space-between;
