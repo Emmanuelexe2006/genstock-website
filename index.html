@@ -179,11 +179,14 @@
 }
 
 /* New About Us Scrolling Section Styles */
-.about-us-scrolling {
-  padding: 4rem 2rem;
-  background: var(--black);
-  position: relative;
-  overflow: hidden;
+.about-us-scrolling p {
+    font-size: 1.2rem; /* Consistent font size */
+    line-height: 1.8; /* Consistent line height */
+    color: #d4ffd4;
+    margin-bottom: 0;
+    /* REMOVED fixed height and overflow from here */
+    position: relative;
+    box-sizing: border-box; /* Include padding/border in height calculation */
 }
 
 .about-us-scrolling-container {
@@ -847,6 +850,10 @@ nav a:hover { color: var(--light-green); transform: translateY(-2px); }
     /* NEW: This rule sets a different scroll offset specifically for mobile devices. */
     #home, #advisors, #about-us, #services, #amcs, #contact, #brochure {
       scroll-margin-top: 100px; /* Adjust this value to precisely match your mobile header's height */
+    .about-us-scrolling p {
+        /* This ensures that on mobile, the text container can grow as needed */
+        height: auto;
+        overflow: visible;
     }
 
     body, html {
